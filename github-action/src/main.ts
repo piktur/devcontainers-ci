@@ -1,17 +1,17 @@
 import * as core from '@actions/core';
-import truncate from 'truncate-utf8-bytes';
 import path from 'path';
-import {exec} from './exec';
+import truncate from 'truncate-utf8-bytes';
 import {
 	devcontainer,
 	DevContainerCliBuildArgs,
 	DevContainerCliExecArgs,
 	DevContainerCliUpArgs,
 } from '../../common/src/dev-container-cli';
+import {exec} from './exec';
 
-import {isDockerBuildXInstalled, pushImage} from './docker';
-import {isSkopeoInstalled, copyImage} from './skopeo';
 import {populateDefaults} from '../../common/src/envvars';
+import {isDockerBuildXInstalled, pushImage} from './docker';
+import {copyImage, isSkopeoInstalled} from './skopeo';
 
 // List the env vars that point to paths to mount in the dev container
 // See https://docs.github.com/en/actions/learn-github-actions/variables
@@ -111,30 +111,33 @@ export async function runMain(): Promise<void> {
 				);
 			}
 		}
-		const buildResult = await core.group('🏗️ build container', async () => {
-			const args: DevContainerCliBuildArgs = {
-				workspaceFolder,
-				configFile,
-				imageName: fullImageNameArray,
-				platform,
-				additionalCacheFroms: cacheFrom,
-				userDataFolder,
-				output: buildxOutput,
-				noCache,
-			};
-			const result = await devcontainer.build(args, log);
-
-			if (result.outcome !== 'success') {
-				core.error(
-					`Dev container build failed: ${result.message} (exit code: ${result.code})\n${result.description}`,
-				);
-				core.setFailed(result.message);
+		if (false) {
+			const buildResult = await core.group('🏗️ build container', async () => {
+				const args: DevContainerCliBuildArgs = {
+					workspaceFolder,
+					configFile,
+					imageName: fullImageNameArray,
+					platform,
+					additionalCacheFroms: cacheFrom,
+					userDataFolder,
+					output: buildxOutput,
+					noCache,
+				};
+				const result = await devcontainer.build(args, log);
+	
+				if (result.outcome !== 'success') {
+					core.error(
+						`Dev container build failed: ${result.message} (exit code: ${result.code})\n${result.description}`,
+					);
+					core.setFailed(result.message);
+				}
+				return result;
+			});
+			if (buildResult.outcome !== 'success') {
+				return;
 			}
-			return result;
-		});
-		if (buildResult.outcome !== 'success') {
-			return;
 		}
+		
 
 		for (const [key, value] of Object.entries(githubEnvs)) {
 			if (process.env[key]) {
