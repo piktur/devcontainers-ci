@@ -1,10 +1,10 @@
-import path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
+import path from 'path';
 import * as config from './config';
+import {substituteValues} from './envvars';
 import {ExecFunction} from './exec';
 import {getAbsolutePath} from './file';
-import {substituteValues} from './envvars';
 import {parseGroup, parsePasswd} from './users';
 
 export async function isDockerBuildXInstalled(

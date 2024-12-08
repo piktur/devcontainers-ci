@@ -4,12 +4,21 @@
     "module": "commonjs",
     "outDir": "../common_lib",
     "rootDir": "./src",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": false,
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "types": [
+      "node"
+    ]
   },
   "exclude": ["node_modules", "**/*.test.ts"],
 }
