@@ -53,7 +53,6 @@ export async function runMain(): Promise<void> {
 		);
 		const runCommand = core.getInput('runCmd');
 		const inputEnvs: string[] = core.getMultilineInput('env');
-		console.log(inputEnvs)
 		const inheritEnv: boolean = core.getBooleanInput('inheritEnv');
 		const inputEnvsWithDefaults = populateDefaults(inputEnvs, inheritEnv);
 		const cacheFrom: string[] = core.getMultilineInput('cacheFrom');
@@ -113,7 +112,6 @@ export async function runMain(): Promise<void> {
 			}
 		}
 		const buildResult = await core.group('🏗️ build container', async () => {
-			console.log({fullImageNameArray, cacheFrom})
 			const args: DevContainerCliBuildArgs = {
 				workspaceFolder,
 				configFile,
